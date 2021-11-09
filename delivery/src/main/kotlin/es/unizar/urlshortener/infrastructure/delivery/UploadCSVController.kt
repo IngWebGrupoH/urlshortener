@@ -7,29 +7,29 @@ import org.springframework.web.multipart.MultipartFile
 import java.io.BufferedReader
 
 @RestController
-class FileUploadController {
+class UploadCSVController {
 
-    val logger = LoggerFactory.getLogger(FileUploadController::class.java)
+    val logger = LoggerFactory.getLogger(UploadCSVController::class.java)
 
     @PostMapping("/fileupload")
-    fun handleFileUpload(@RequestParam("file") file: MultipartFile): ServiceResponse {
+    fun handleFileUpload(@RequestParam("file") file: MultipartFile): CSVResponse {
         logger.info("handling fileupload for {}", file.name)
         val content = file.inputStream.bufferedReader().use(BufferedReader::readText)
         logger.info("file content = {}", content)
-        return ServiceResponse.ok(content)
+        return CSVResponse.ok(content)
     }
 }
 
-data class ServiceResponse(val isSuccess: Boolean,
+data class CSVResponse(val isSuccess: Boolean,
                            val data: String? = null) {
 
     companion object {
-        fun ok(data: String): ServiceResponse {
-            return ServiceResponse(isSuccess = true, data = data)
+        fun ok(data: String): CSVResponse {
+            return CSVResponse(isSuccess = true, data = data)
         }
 
-        fun fail(): ServiceResponse {
-            return ServiceResponse(isSuccess = false)
+        fun fail(): CSVResponse {
+            return CSVResponse(isSuccess = false)
         }
     }
 }
