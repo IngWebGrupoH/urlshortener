@@ -6,8 +6,18 @@ import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.multipart.MultipartFile
 import java.io.BufferedReader
 
+
+interface UploadCSVController {
+
+    /**
+     * Redirects and logs a short url identified by its [id].
+     *
+     * **Note**: Delivery of use cases [RedirectUseCase] and [LogClickUseCase].
+     */
+    fun handleFileUpload(@RequestParam("file") file: MultipartFile): CSVResponse
+}
 @RestController
-class UploadCSVController {
+class UploadCSVControllerImpl {
 
     val logger = LoggerFactory.getLogger(UploadCSVController::class.java)
 
