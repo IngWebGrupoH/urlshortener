@@ -22,7 +22,7 @@ import org.springframework.http.HttpHeaders
 import java.io.StringWriter
 import com.opencsv.CSVWriter
 
-import java.net.URI
+import java.net.*
 import javax.servlet.http.HttpServletRequest
 
 
@@ -50,11 +50,14 @@ class UploadCSVControllerImpl(
             val content = String(file.getBytes()).split("\n")
             val shortUrlArray=ArrayList<CSVDataOut>()
             for (i in content) {
-                logger.info("url="+i)
-                val response=createShortUrl.create(i.subSequence(0, i.length-1).toString(), ShortUrlProperties(
+                val url = URL(i);
+                val nullFragment = null;
+                val uri = URI(url.getProtocol(), url.getHost(), url.getPath(), url.getQuery(), nullFragment);
+                logger.info("url="+uri.toString())
+                val response=createShortUrl.create(uri.toString(), ShortUrlProperties(
                     ip = request.remoteAddr
                 )) 
-                shortUrlArray.add(CSVDataOut(URI(i),ShortUrlDataOut(
+                shortUrlArray.add(CSVDataOut(uri,ShortUrlDataOut(
                     url = URI(response.hash),
                     properties = mapOf(
                         "safe" to response.properties.safe
@@ -62,14 +65,11 @@ class UploadCSVControllerImpl(
                 )))
                 
             }
-            val  strW = StringWriter();
-            val writeCSV = CSVWriter(strW);
+            val shorteredUrlArray=ArrayList<String>()
             for (i in shortUrlArray.iterator()){
-                val newLine = arrayOf(i.url.toString(),i.shortUrl.url.toString())
-                writeCSV.writeNext(newLine);
+                shorteredUrlArray.add(i.url.toString()+"    "+"http://localhost:8080/tiny-"+i.shortUrl.url.toString())
             }
-            writeCSV.close();
-            return CSVResponse.ok(content.toString())
+            return CSVResponse.ok(shorteredUrlArray.toString())
         }
     }
     
