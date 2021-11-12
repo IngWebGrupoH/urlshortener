@@ -56,6 +56,8 @@ project(":delivery") {
         "implementation"("org.springframework.boot:spring-boot-starter-hateoas")
         "implementation"("com.fasterxml.jackson.module:jackson-module-kotlin")
         "implementation"("commons-validator:commons-validator:1.6")
+        "implementation"("org.apache.directory.studio:org.apache.commons.io:2.4")
+        "implementation"("com.opencsv:opencsv:4.0")
         "implementation"("com.google.guava:guava:23.0")
 
         "testImplementation"("org.springframework.boot:spring-boot-starter-test")

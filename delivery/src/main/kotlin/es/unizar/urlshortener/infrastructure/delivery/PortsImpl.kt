@@ -10,7 +10,9 @@ import java.nio.charset.StandardCharsets
  * Implementation of the port [ValidatorService].
  */
 class ValidatorServiceImpl : ValidatorService {
-    override fun isValid(url: String) = urlValidator.isValid(url)
+    override fun isValid(url: String)  =urlValidator.isValid(url)
+    
+
 
     companion object {
         val urlValidator = UrlValidator(arrayOf("http", "https"))
