@@ -52,3 +52,17 @@ data class ClickProperties(
     val platform: String? = null,
     val country: String? = null
 )
+
+data class CSVProperties(
+    val ip: String? = null,
+    val sponsor: String? = null,
+    val owner: String? = null,
+    val country: String? = null
+)
+
+data class CSVFile(
+    val urlArray: ArrayList<String>,
+    val safeArray:ArrayList<Boolean>,
+    val created: OffsetDateTime = OffsetDateTime.now(),
+    val properties: CSVProperties = CSVProperties()
+)

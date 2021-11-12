@@ -4,11 +4,27 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.multipart.MultipartFile
+import org.springframework.web.multipart.commons.CommonsMultipartFile
+import es.unizar.urlshortener.core.*
 
 import es.unizar.urlshortener.core.usecases.LogClickUseCase
-import es.unizar.urlshortener.core.usecases.CreateShortUrlUseCase
 import es.unizar.urlshortener.core.usecases.RedirectUseCase
-import java.io.BufferedReader
+import es.unizar.urlshortener.core.usecases.CreateShortUrlUseCase
+import es.unizar.urlshortener.core.ShortUrlProperties
+import es.unizar.urlshortener.core.usecases.*
+
+import org.springframework.web.bind.annotation.*
+import org.springframework.hateoas.server.mvc.linkTo
+import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
+import org.springframework.http.HttpHeaders
+
+import java.io.StringWriter
+import com.opencsv.CSVWriter
+
+import java.net.URI
+import javax.servlet.http.HttpServletRequest
+
 
 
 interface UploadCSVController {
@@ -18,36 +34,62 @@ interface UploadCSVController {
      *
      * **Note**: Delivery of use cases [RedirectUseCase] and [LogClickUseCase].
      */
-    fun handleFileUpload(@RequestParam("file") file: MultipartFile): CSVResponse
+    fun handleFileUpload(file: MultipartFile, request: HttpServletRequest): CSVResponse
 }
+
 @RestController
 class UploadCSVControllerImpl(
-    val redirectUseCase: RedirectUseCase,
-    val logClickUseCase: LogClickUseCase,
-    val createShortUrlUseCase: CreateShortUrlUseCase
+    val createShortUrl : CreateShortUrlUseCaseImpl
     ):UploadCSVController {
-    val logger = LoggerFactory.getLogger(UploadCSVControllerImpl::class.java)
+        
 
-    @PostMapping("/api/uploadCSV")
-    override fun handleFileUpload(@RequestParam("csv") file: MultipartFile): CSVResponse {
-        logger.info("handling fileupload for {}", file.name)
-        val content = String(file.getBytes());//inputStream.bufferedReader().use(BufferedReader::readText)
-        val urlArray=content.split("\n")
-        logger.info("file content = {}", urlArray)
-        return CSVResponse.ok(urlArray.toString())
-    }
-}
-
-data class CSVResponse(val isSuccess: Boolean,
-                           val data: String? = null) {
-
-    companion object {
-        fun ok(data: String): CSVResponse {
-            return CSVResponse(isSuccess = true, data = data)
+        @PostMapping("/api/CSVUpload")
+        override fun handleFileUpload(@RequestParam("csv") file: MultipartFile,request: HttpServletRequest): CSVResponse {
+            val logger = LoggerFactory.getLogger(this.javaClass)
+            logger.info("handling fileupload for {}", file.name)
+            val content = String(file.getBytes()).split("\n")
+            val shortUrlArray=ArrayList<CSVDataOut>()
+            for (i in content) {
+                logger.info("url="+i)
+                val response=createShortUrl.create(i.subSequence(0, i.length-1).toString(), ShortUrlProperties(
+                    ip = request.remoteAddr
+                )) 
+                shortUrlArray.add(CSVDataOut(URI(i),ShortUrlDataOut(
+                    url = URI(response.hash),
+                    properties = mapOf(
+                        "safe" to response.properties.safe
+                    )
+                )))
+                
+            }
+            val  strW = StringWriter();
+            val writeCSV = CSVWriter(strW);
+            for (i in shortUrlArray.iterator()){
+                val newLine = arrayOf(i.url.toString(),i.shortUrl.url.toString())
+                writeCSV.writeNext(newLine);
+            }
+            writeCSV.close();
+            return CSVResponse.ok(content.toString())
         }
-
-        fun fail(): CSVResponse {
-            return CSVResponse(isSuccess = false)
+    }
+    
+    data class CSVResponse(val isSuccess: Boolean,
+                               val data: String? = null) {
+    
+        companion object {
+            fun ok(data: String): CSVResponse {
+                return CSVResponse(isSuccess = true, data = data)
+            }
+    
+            fun fail(): CSVResponse {
+                return CSVResponse(isSuccess = false)
+            }
         }
     }
-}
+/**
+ * Data returned after the creation of a short url.
+ */
+data class CSVDataOut(
+    val url: URI? = null,
+    val shortUrl: ShortUrlDataOut
+)
