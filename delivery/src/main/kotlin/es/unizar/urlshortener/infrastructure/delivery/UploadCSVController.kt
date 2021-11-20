@@ -42,7 +42,7 @@ class UploadCSVControllerImpl(
     val createShortUrl : CreateShortUrlUseCase
     ):UploadCSVController {
 
-        @PostMapping("/api/CSVUpload")
+        @PostMapping("/api/CSVUpload" , consumes =  ["multipart/form-data"] )
         override fun handleFileUpload(@RequestParam("csv") csv: MultipartFile,request: HttpServletRequest): ResponseEntity<CSVResponse> {
             val logger = LoggerFactory.getLogger(this.javaClass)
             logger.info("handling fileupload for {}", csv.name)
