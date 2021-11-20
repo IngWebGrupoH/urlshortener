@@ -1,11 +1,14 @@
 $(document).ready(
     function() {
-        $("#fileInput").submit(
+        $("#fileInputForm").submit(
             function(event) {
+                event.preventDefault();
+                var formFile = new FormData();
+                formFile.append('csv',$( '#fileInput' )[0].files[0]);
                 $.ajax({
                     type : "POST",
                     url : "/api/CSVUpload",
-                    data : $(this).serialize(),
+                    data : formFile,
                     enctype : 'multipart/form-data',
                     success : function(msg, status, request) {
                         $("#result").html(
