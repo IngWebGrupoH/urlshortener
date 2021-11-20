@@ -2,15 +2,10 @@ $(document).ready(
     function() {
         $("#fileInput").submit(
             function(event) {
-                event.preventDefault();
-                var formData = new FormData();
-                var file = $('#fileInput')[0].files[0];
-
-                formData.append("csv", file);
                 $.ajax({
                     type : "POST",
                     url : "/api/CSVUpload",
-                    data : formData,
+                    data : $(this).serialize(),
                     enctype : 'multipart/form-data',
                     success : function(msg, status, request) {
                         $("#result").html(
