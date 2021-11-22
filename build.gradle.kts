@@ -59,6 +59,9 @@ project(":delivery") {
         "implementation"("org.apache.directory.studio:org.apache.commons.io:2.4")
         "implementation"("com.opencsv:opencsv:4.0")
         "implementation"("com.google.guava:guava:23.0")
+        "implementation"("org.webjars:webjars-locator-core")
+	    "implementation"("org.webjars:sockjs-client:1.0.2")
+	    "implementation"("org.webjars:stomp-websocket:2.3.3")
 
         "testImplementation"("org.springframework.boot:spring-boot-starter-test")
         "testImplementation"("org.mockito.kotlin:mockito-kotlin:3.2.0")

@@ -8,9 +8,9 @@ $(document).ready(
                 $.ajax({
                     type : "POST",
                     url : "/api/CSVUpload",
-                    data : $(this).serialize(),
+                    data : formFile,
                     enctype : 'multipart/form-data',
-                    contentType : 'multipart/form-data',
+                    contentType: false,
                     processData: false,
                     success : function(msg, status, request) {
                         $("#result").html(
