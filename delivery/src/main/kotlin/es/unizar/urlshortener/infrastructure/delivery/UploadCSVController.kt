@@ -28,26 +28,34 @@ import javax.servlet.http.HttpServletRequest
 
 
 interface UploadCSVController {
-
+    fun UploadCSVController(){}
     /**
      * Redirects and logs a short url identified by its [id].
      *
      * **Note**: Delivery of use cases [RedirectUseCase] and [LogClickUseCase].
      */
-    fun handleFileUpload(file: MultipartFile, request: HttpServletRequest): CSVResponse
+    fun handleFileUpload(csv: MultipartFile, request: HttpServletRequest): ResponseEntity<CSVResponse>
 }
 
 @RestController
 class UploadCSVControllerImpl(
-    val createShortUrl : CreateShortUrlUseCaseImpl
+    val createShortUrl : CreateShortUrlUseCase
     ):UploadCSVController {
-        
 
-        @PostMapping("/api/CSVUpload")
-        override fun handleFileUpload(@RequestParam("csv") file: MultipartFile,request: HttpServletRequest): CSVResponse {
+        @PostMapping("/api/CSVUpload" , consumes =  ["multipart/form-data"] )
+        override fun handleFileUpload(@RequestParam("csv") csv: MultipartFile,request: HttpServletRequest): ResponseEntity<CSVResponse> {
             val logger = LoggerFactory.getLogger(this.javaClass)
-            logger.info("handling fileupload for {}", file.name)
-            val content = String(file.getBytes()).split("\n")
+            logger.info("handling fileupload for {}", csv.name)
+            val content = String(csv.getBytes()).split("\n")
+            if(content.isEmpty()){
+                val h = HttpHeaders()
+                h.location = null
+                val response = CSVResponse(
+                    data= null,
+                    isSuccess = false
+                )
+                return ResponseEntity<CSVResponse>(response, h, HttpStatus.NO_CONTENT)
+            }
             val shortUrlArray=ArrayList<CSVDataOut>()
             for (i in content) {
                 val url = URL(i);
@@ -69,7 +77,13 @@ class UploadCSVControllerImpl(
             for (i in shortUrlArray.iterator()){
                 shorteredUrlArray.add(i.url.toString()+"    "+"http://localhost:8080/tiny-"+i.shortUrl.url.toString())
             }
-            return CSVResponse.ok(shorteredUrlArray.toString())
+            val h = HttpHeaders()
+            h.location = shortUrlArray.get(0).url
+            val response = CSVResponse(
+                data= shorteredUrlArray.toString(),
+                isSuccess = true
+            )
+            return ResponseEntity<CSVResponse>(response, h, HttpStatus.OK)
         }
     }
     
