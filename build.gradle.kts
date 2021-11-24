@@ -60,6 +60,7 @@ project(":delivery") {
         "implementation"("com.opencsv:opencsv:4.0")
         "implementation"("com.google.guava:guava:23.0")
         "implementation"("io.github.g0dkar:qrcode-kotlin:1.1.0") // MIO
+        "implementation"("org.springframework.boot:spring-boot-starter-websocket")
 
         "testImplementation"("org.springframework.boot:spring-boot-starter-test")
         "testImplementation"("org.mockito.kotlin:mockito-kotlin:3.2.0")
