@@ -6,14 +6,15 @@ import org.springframework.boot.runApplication
 import org.springframework.context.annotation.Configuration
 import org.springframework.web.socket.*
 import org.springframework.web.socket.config.annotation.*
-import org.springframework.web.socket.handler.TextWebSocketHandler
-import java.util.concurrent.atomic.AtomicLong
+import org.springframework.web.socket.handler.AbstractWebSocketHandler
 
+import java.util.concurrent.atomic.AtomicLong
+import org.slf4j.LoggerFactory
 
 class User(val id: Long, val name: String)
 class Message(val msgType: String, val data: Any)
 
-class UploadCSVWebSocketController : TextWebSocketHandler() {
+class UploadCSVWebSocketController : AbstractWebSocketHandler() {
 
     val sessionList = HashMap<WebSocketSession, User>()
     var uids = AtomicLong(0)
@@ -22,21 +23,26 @@ class UploadCSVWebSocketController : TextWebSocketHandler() {
     override fun afterConnectionClosed(session: WebSocketSession, status: CloseStatus) {
         sessionList -= session
     }
-
-    public override fun handleTextMessage(session: WebSocketSession?, message: TextMessage?) {
+    
+    override fun handleTextMessage(session: WebSocketSession, message: TextMessage) {
         val json = ObjectMapper().readTree(message?.payload)
+        val logger = LoggerFactory.getLogger(this.javaClass)
+        logger.info("Message type "+json.get("type").asText()+" received");
         // {type: "join/say", data: "name/msg"}
         when (json.get("type").asText()) {
-            "join" -> {
+            // "join" -> {
+            //     val user = User(uids.getAndIncrement(), json.get("data").asText())
+            //     sessionList.put(session!!, user)
+            //     // tell this user about all other users
+            //     emit(session, Message("shorteredCSV", sessionList.values))
+            // }
+            "uploadCSV" -> {
                 val user = User(uids.getAndIncrement(), json.get("data").asText())
                 sessionList.put(session!!, user)
-                // tell this user about all other users
-                emit(session, Message("users", sessionList.values))
-                // tell all other users, about this user
-                broadcastToOthers(session, Message("join", user))
-            }
-            "uploadCSV" -> {
-                broadcast(Message("say", json.get("data").asText()))
+                logger.info(user.name);
+                
+
+                emit(session, Message("CSVResult", user.name))
             }
         }
     }
@@ -49,6 +55,6 @@ class UploadCSVWebSocketController : TextWebSocketHandler() {
 @Configuration @EnableWebSocket
 class WSConfig : WebSocketConfigurer {
     override fun registerWebSocketHandlers(registry: WebSocketHandlerRegistry) {
-        registry.addHandler(UploadCSVWebSocketController(), "/chat").withSockJS()
+        registry.addHandler(UploadCSVWebSocketController(), "/api").withSockJS()
     }
 }
