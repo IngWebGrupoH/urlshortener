@@ -61,7 +61,6 @@ public class UploadCSVWebSocketController(
     @Throws(InterruptedException::class, IOException::class)
     public override fun handleTextMessage(session: WebSocketSession, message: TextMessage) {
         LOGGER.info("Server Message ... Session "+session.id)
-        LOGGER.info("Server received "+ message.payload)
         
         val content = message.payload.split("\n")
         if(content.isEmpty()){
@@ -89,7 +88,7 @@ public class UploadCSVWebSocketController(
                 )
             )))
             session.sendMessage(TextMessage(("http://localhost:8080/tiny-"+URI(response.hash).toString())))
-            Thread.sleep(1_000)
+            Thread.sleep(500)
         }  
     }
     @OnError

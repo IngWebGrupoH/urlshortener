@@ -14,6 +14,7 @@ function send() {
     };
     sleep(500).then(() => {
         var reader = new FileReader();
+        $("#result").html("");
         reader.onload = function(event) {
             console.log('File content:', event.target.result);
             ws.send(event.target.result);
