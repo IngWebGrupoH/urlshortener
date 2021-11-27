@@ -57,9 +57,12 @@ project(":delivery") {
         "implementation"("com.fasterxml.jackson.module:jackson-module-kotlin")
         "implementation"("commons-validator:commons-validator:1.6")
         "implementation"("org.apache.directory.studio:org.apache.commons.io:2.4")
+        "implementation"("org.mockito.kotlin:mockito-kotlin:3.2.0")
+        
         "implementation"("com.opencsv:opencsv:4.0")
         "implementation"("com.google.guava:guava:23.0")
         "implementation"("io.github.g0dkar:qrcode-kotlin:1.1.0") // MIO
+        "implementation"("org.springframework.boot:spring-boot-starter-websocket")
 
         "testImplementation"("org.springframework.boot:spring-boot-starter-test")
         "testImplementation"("org.mockito.kotlin:mockito-kotlin:3.2.0")

@@ -5,6 +5,7 @@ $(document).ready(
                 event.preventDefault();
                 var formFile = new FormData();
                 formFile.append('csv',$('#fileInput')[0].files[0]);
+                var name = $('#fileInput')[0].files[0].name
                 $.ajax({
                     type : "POST",
                     url : "/api/CSVUpload",
@@ -23,7 +24,7 @@ $(document).ready(
                         var encodedUri = encodeURI(csvContent);
                         var link = document.createElement("a");
                         link.setAttribute("href", encodedUri);
-                        link.setAttribute("download", "shorterUrls.csv");
+                        link.setAttribute("download", name.split(".")[0]+"_short.csv");
                         document.body.appendChild(link); // Required for FF
 
                         link.click(); // This will download the data file named "my_data.csv".

@@ -75,7 +75,7 @@ class UploadCSVControllerImpl(
             }
             val shorteredUrlArray=ArrayList<String>()
             for (i in shortUrlArray.iterator()){
-                shorteredUrlArray.add(i.url.toString()+"    "+"http://localhost:8080/tiny-"+i.shortUrl.url.toString())
+                shorteredUrlArray.add("http://localhost:8080/tiny-"+i.shortUrl.url.toString())
             }
             val h = HttpHeaders()
             h.location = shortUrlArray.get(0).url
