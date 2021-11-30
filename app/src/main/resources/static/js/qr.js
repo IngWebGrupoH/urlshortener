@@ -13,7 +13,7 @@ $(document).ready(
                     },
                     error : function(e) {
                         $("#result").html(
-                            "<div class='alert alert-danger lead'>"+JSON.stringify(e)+"</div>");
+                            "<div class='alert alert-danger lead'>ERROR</div>");
                     }
                 });
             });
