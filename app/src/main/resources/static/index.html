@@ -9,6 +9,7 @@
     <script type="text/javascript"
             src="webjars/bootstrap/3.3.5/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="js/app.js"></script>
+    <script type="text/javascript" src="js/qr.js"></script>
     <script type="text/javascript" src="js/csvWebSocket.js"></script>
     
 </head>
@@ -153,6 +154,15 @@ onreadystatechange="if (this.readyState === 'complete') this.onload()">
                             class="btn btn-lg btn-primary" type="submit">Short me!</button></span>
                 </div>
             </form>
+            <form class="col-lg-12" role="form" id="qrForm" action=""
+                  enctype="multipart/form-data">
+                <div class="input-group input-group-lg col-sm-offset-4 col-sm-4">
+                    <input type="text" class="center-block form-control input-lg"
+                           title="Enter a URL" placeholder="Enter a URL" name="url">
+                    <span class="input-group-btn"><button
+                            class="btn btn-lg btn-primary" type="submit">Generate QR!</button></span>
+                </div>
+            </form>
             <form class="col-lg-12" role="form" id="fileInputForm" action="">
                 <div class="input-group input-group-lg col-sm-offset-4 col-sm-4">
                     <input type="file" id ="fileInput" class="center-block form-control input-lg"
@@ -163,6 +173,7 @@ onreadystatechange="if (this.readyState === 'complete') this.onload()">
                         
                 </div>
             </form>
+            
         </div>
     </div>
     <div class="row">

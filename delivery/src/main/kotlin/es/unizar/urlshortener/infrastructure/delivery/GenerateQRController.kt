@@ -29,6 +29,10 @@ import java.io.File
 import javax.imageio.ImageIO
 import io.github.g0dkar.qrcode.QRCode
 import java.awt.image.BufferedImage
+import org.springframework.core.io.ByteArrayResource
+import org.springframework.http.HttpHeaders.CONTENT_DISPOSITION
+import org.springframework.http.MediaType.IMAGE_PNG_VALUE
+import java.io.ByteArrayOutputStream
 
 
 
@@ -39,8 +43,10 @@ interface GenerateQRController {
      * Generates a QR code from a specified URL.
      *
      */
-    fun handleURLToQR(url: String, request: HttpServletRequest): String
+    fun handleURLToQR(url: String, request: HttpServletRequest): ResponseEntity<ByteArrayResource>
 }
+
+
 
 @RestController
 class GenerateQRControllerImpl(
@@ -48,14 +54,15 @@ class GenerateQRControllerImpl(
     ):GenerateQRController {
         
 
-        @PostMapping("/api/URLToQR")
-        override fun handleURLToQR(@RequestParam("url") url: String,request: HttpServletRequest): String {
-            val imageData = QRCode(url).render()
-            // Save it as a PNG File:
-            if(ImageIO.write(imageData, "PNG", File("qr.png"))){
-                return "Success"
-            }
-            return "error generating qr";
+        @GetMapping("/api/URLToQR")
+        override fun handleURLToQR(@RequestParam("url") url: String,request: HttpServletRequest): ResponseEntity<ByteArrayResource> {
+            val imageData = QRCode(url).render(cellSize = 10)
+            val imageBytes = ByteArrayOutputStream().also { ImageIO.write(imageData, "PNG", it) }.toByteArray()
+            val resource = ByteArrayResource(imageBytes, IMAGE_PNG_VALUE)
+            println("Entro aquiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii")
+            return ResponseEntity.ok()
+                .header(CONTENT_DISPOSITION, "attachment; filename=\"qrcode.png\"")
+                .body(resource)
         }
     }
     
