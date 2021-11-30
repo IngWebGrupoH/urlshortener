@@ -3,18 +3,17 @@ $(document).ready(
         $("#qrForm").submit(
             function(event) {
                 event.preventDefault();
-                println("------------------------------LLego aqui --------------------")
                 $.ajax({
                     type : "GET",
                     url : "/api/URLToQR",
                     data : $(this).serialize(),
-                    success : function() {
+                    success : function(image, request) {
                         $("#result").html(
-                            "<img src=example01.png>");
+                            "<img id=ItemPreview src=data:image/png;base64,"+image+">");
                     },
-                    error : function() {
+                    error : function(e) {
                         $("#result").html(
-                            "<div class='alert alert-danger lead'>ERROR</div>");
+                            "<div class='alert alert-danger lead'>"+JSON.stringify(e)+"</div>");
                     }
                 });
             });

@@ -33,9 +33,11 @@ import org.springframework.core.io.ByteArrayResource
 import org.springframework.http.HttpHeaders.CONTENT_DISPOSITION
 import org.springframework.http.MediaType.IMAGE_PNG_VALUE
 import java.io.ByteArrayOutputStream
-
-
-
+import java.io.IOException
+import java.nio.file.Files
+import java.nio.file.Paths
+import java.util.Arrays
+import java.util.Base64
 
 interface GenerateQRController {
 
@@ -43,7 +45,7 @@ interface GenerateQRController {
      * Generates a QR code from a specified URL.
      *
      */
-    fun handleURLToQR(url: String, request: HttpServletRequest): ResponseEntity<ByteArrayResource>
+    fun handleURLToQR(url: String, request: HttpServletRequest): ResponseEntity<ByteArray>
 }
 
 
@@ -55,14 +57,17 @@ class GenerateQRControllerImpl(
         
 
         @GetMapping("/api/URLToQR")
-        override fun handleURLToQR(@RequestParam("url") url: String,request: HttpServletRequest): ResponseEntity<ByteArrayResource> {
-            val imageData = QRCode(url).render(cellSize = 10)
-            val imageBytes = ByteArrayOutputStream().also { ImageIO.write(imageData, "PNG", it) }.toByteArray()
-            val resource = ByteArrayResource(imageBytes, IMAGE_PNG_VALUE)
-            println("Entro aquiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii")
-            return ResponseEntity.ok()
-                .header(CONTENT_DISPOSITION, "attachment; filename=\"qrcode.png\"")
-                .body(resource)
+        override fun handleURLToQR(@RequestParam("url") url: String,request: HttpServletRequest): ResponseEntity<ByteArray> {
+            val imageData = QRCode(url).render(cellSize = 5)
+            val img = ImageIO.write(imageData, "PNG", File("qr.png"))
+            val path = "qr.png"
+
+            val encoded = Files.readAllBytes(Paths.get(path))
+
+            //val imageBytes = ByteArrayOutputStream().also { ImageIO.write(imageData, "PNG", it) }.toByteArray()
+            //val resource = ByteArrayResource(imageBytes, IMAGE_PNG_VALUE)
+            val base64 = Base64.getEncoder().encode(encoded);
+            return ResponseEntity(base64, HttpStatus.CREATED)
         }
     }
     

@@ -20,5 +20,8 @@ $(document).ready(
                             "<div class='alert alert-danger lead'>ERROR</div>");
                     }
                 });
+                
             });
-    });
+    }
+    
+    );
