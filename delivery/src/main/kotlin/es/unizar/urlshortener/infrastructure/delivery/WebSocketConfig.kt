@@ -11,8 +11,12 @@ import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry
 class WebSocketConfig : WebSocketConfigurer {
     @Autowired
     private lateinit var socketHandler: UploadCSVWebSocketController
+
+    @Autowired
+    private lateinit var socketHandlerCSVQR: UploadCSVQRWebSocketController
  
     override fun registerWebSocketHandlers(registry: WebSocketHandlerRegistry) {
         registry.addHandler(socketHandler, "/websocket/CSVUpload").setAllowedOrigins("*")
+        registry.addHandler(socketHandlerCSVQR, "/websocket/CSVUploadQR").setAllowedOrigins("*")
     }
 }
