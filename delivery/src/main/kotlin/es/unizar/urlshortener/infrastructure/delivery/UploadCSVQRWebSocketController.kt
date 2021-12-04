@@ -78,7 +78,7 @@ public class UploadCSVQRWebSocketController(
     @Throws(InterruptedException::class, IOException::class)
     public override fun handleTextMessage(session: WebSocketSession, message: TextMessage) {
         LOGGER.info("Server Message ... Session "+session.id)
-        
+        session.setTextMessageSizeLimit(20000);
         val content = message.payload.split("\n")
         if(content.isEmpty()){
             val h = HttpHeaders()
@@ -112,6 +112,7 @@ public class UploadCSVQRWebSocketController(
                     val encoded = Files.readAllBytes(Paths.get(path))
     
                     val base64 = Base64.getEncoder().encode(encoded);
+                    Thread.sleep(1500)
                     session.sendMessage(TextMessage("QRMessage"));
                     session.sendMessage(TextMessage(base64));
             }

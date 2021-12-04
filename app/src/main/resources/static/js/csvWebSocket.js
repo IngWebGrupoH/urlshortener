@@ -1,6 +1,4 @@
 //var webSocket = SockJS('/');
-var nElement = 0;
-var nImage = 0;
 function connect() {
     
 }
@@ -8,7 +6,6 @@ function sleep (time) {
     return new Promise((resolve) => setTimeout(resolve, time));
   }
 function send() {
-  let result=[];
   let messages=[];
   let images=[];
   if(($('#bc').is(':checked'))) {
@@ -18,26 +15,39 @@ function send() {
       if(event.data =="QRMessage"){
           var funtion=ws.onmessage;
           ws.onmessage = function(image){
-            images.push(image);
-            ws.onmessage = funtion;
-            result.forEach(element => {
-              $("#result").clear();
-              $("#result").append(result)
-              $("#result").append("<img id=ItemPreview src=data:image/png;base64,"+element+">");
-              nImage = nImage +1;
+            var count = 0
+            var res = ""
+            images.push(base64.encodestring(image))
+            $("#result").empty()
+            messages.forEach(element => {
+              res= res + element + "\t"
+              if(images.length>count){
+                $("#result").html(
+                  "<img id=ItemPreview src=data:image/png;base64,"+images[count]+">");
+                $("#result").html("\n");
+              }else{
+                res = res +"\n"
+              }
+              count = count + 1
             });
-            $("#result").html("<p>"+result+"</p>");
+        $("#result").html(res);
           };
+          ws.onmessage = funtion
       }else{
         messages.push(event.data+"\t"+"Analyzing"+"\t");
-        result.forEach(element => {
-          $("#result").clear();
-          $("#result").append(result)
-          $("#result").append("<img id=ItemPreview src=data:image/png;base64,"+element+">");
-          nImage = nImage +1;
+        var count = 0
+        var res = ""
+        $("#result").empty()
+        messages.forEach(element => {
+          res= res + element + "\t"
+          if(images.length>count){
+            res = res +"<img id=ItemPreview src=data:image/png;base64,"+images[count]+"\n"+">"
+          }else{
+            res = res +"\n"
+          }
+          count = count + 1
         });
-        $("#result").html("<p>"+result+"</p>");
-        nElement = nElement + 1;
+        $("#result").html(res);
       }
 
     };
