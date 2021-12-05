@@ -4,6 +4,9 @@ $(document).ready(
             function(event) {
                 event.preventDefault();
                 if(($('#bc').is(':checked'))) {
+                    $("#resultCSVQR").empty();
+                    $("#result").empty();
+                    $("#resultQr").empty();
                     $.ajax({
                         type : "GET",
                         url : "/api/URLToQR",

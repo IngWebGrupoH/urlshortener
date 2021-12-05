@@ -15,12 +15,13 @@ function send() {
     wsQR.onmessage = function(msg){
       console.log(msg)
       $("#resultCSVQR").append(
-        "<img id=ItemPreview src=data:image/png;base64,"+msg.data+">");
+        "<p><img id=ItemPreview src=data:image/png;base64,"+msg.data+"></p>");
     }
     ws.onmessage = function(event) {
         var funtion=ws.onmessage;
         ws.onmessage = funtion
-        $("#result").append(event.data+"\t\t\t"+"Analyzing\n\n\n");
+        $("#result").append("<p>"+event.data+"    "+'<img src="js/images/clock.png" width="60" height="60"></img>'+
+                          "</p>");
     };
     sleep(500).then(() => {
         var reader = new FileReader();

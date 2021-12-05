@@ -1,75 +1,71 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <title>URL Shortener</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css"
-          href="webjars/bootstrap/3.3.5/css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="webjars/bootstrap/3.3.5/css/bootstrap.min.css" />
     <script type="text/javascript" src="webjars/jquery/2.1.4/jquery.min.js"></script>
-    <script type="text/javascript"
-            src="webjars/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="webjars/bootstrap/3.3.5/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="js/app.js"></script>
     <script type="text/javascript" src="js/qr.js"></script>
     <script type="text/javascript" src="js/csvWebSocket.js"></script>
 
-    
+
 </head>
+
 <body>
-<div class="container-full">
-    <div class="row">
-        <div class="col-lg-12 text-center">
-            <h1>URL Shortener</h1>
-            <p class="lead">A front-end example page for the project</p>
-            <br>
-            <form class="col-lg-12" role="form" id="shortener" action=""
-                  enctype="multipart/form-data">
-                <div class="input-group input-group-lg col-sm-offset-4 col-sm-4">
-                    <input type="text" class="center-block form-control input-lg"
-                           title="Enter a URL" placeholder="Enter a URL" name="url">
-                    <span class="input-group-btn"><button
+    <div class="container-full">
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <h1>URL Shortener</h1>
+                <p class="lead">A front-end example page for the project</p>
+                <br>
+                <form class="col-lg-12" role="form" id="shortener" action="" enctype="multipart/form-data">
+                    <div class="input-group input-group-lg col-sm-offset-4 col-sm-4">
+                        <input type="text" class="center-block form-control input-lg" title="Enter a URL" placeholder="Enter a URL" name="url">
+                        <span class="input-group-btn"><button
                             class="btn btn-lg btn-primary" type="submit">Short me!</button></span>
-                </div>
-                <div class="input-group input-group-lg col-sm-offset-4 col-sm-4">
-                    <label> Want to generate QR?</label>
-                    <input style="margin-left: 10px;" name="on_off" checked type="checkbox" id="bc"  class="switch-input on-off">                        
-                </div>
-            </form>
-            <form class="col-lg-12" role="form" id="fileInputForm" action="">
-                <div class="input-group input-group-lg col-sm-offset-4 col-sm-4">
-                    <input type="file" id ="fileInput" class="center-block form-control input-lg"
-                           title="Enter a CSV file" placeholder="Enter a CSV">
-                           <input type="button" onClick="send();" value="Process CSV" />
-                        </body>
-                        </html>
-                        
-                </div>
-            </form>
-            
-        </div>
-    </div>
-    <div class="row">
-        <div class="column">
-            <div class="col-lg-12 text-center">
-                <div class="col-sm-offset-4 col-sm-4 text-center">
-                    <br />
-                    <div id="result" />
-                    
-                </div>
-            </div>
-            <div class="col-lg-12 text-center">
-                <div class="col-sm-offset-4 col-sm-4 text-center">
-                    <br />
-                    <div  id="resultQr" />
-                </div>
+                    </div>
+                    <div class="input-group input-group-lg col-sm-offset-4 col-sm-4">
+                        <label> Want to generate QR?</label>
+                        <input style="margin-left: 10px;" name="on_off" checked type="checkbox" id="bc" class="switch-input on-off">
+                    </div>
+                </form>
+                <form class="col-lg-12" role="form" id="fileInputForm" action="">
+                    <div class="input-group input-group-lg col-sm-offset-4 col-sm-4">
+                        <input type="file" id="fileInput" class="center-block form-control input-lg" title="Enter a CSV file" placeholder="Enter a CSV">
+                        <input type="button" onClick="send();" value="Process CSV" />
+
+                    </div>
+                </form>
+
             </div>
         </div>
-        <div class="column">
-            <div class="col-sm-offset-4 col-sm-4 text-center">
-                <br />
-                <div  id="resultCSVQR" />
+        <div class="row">
+            <div class="column">
+                <div class="col-lg-12 text-center">
+                    <div class="col-sm-offset-4 col-sm-4 text-center">
+                        <br />
+                        <div id="result" />
+
+                    </div>
+                </div>
+                <div class="col-lg-12 text-center">
+                    <div class="col-sm-offset-4 col-sm-4 text-center">
+                        <br />
+                        <div id="resultQr" />
+                    </div>
+                </div>
+            </div>
+            <div class="column">
+                <div class="col-sm-offset-4 col-sm-4 text-center">
+                    <br />
+                    <div id="resultCSVQR" />
+                </div>
             </div>
         </div>
     </div>
-</div>
 </body>
+
 </html>
