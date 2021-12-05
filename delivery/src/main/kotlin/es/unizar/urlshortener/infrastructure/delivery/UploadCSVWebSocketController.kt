@@ -88,8 +88,8 @@ public class UploadCSVWebSocketController(
                 )
             )))
             session.sendMessage(TextMessage(("http://localhost:8080/tiny-"+URI(response.hash).toString())))
-            Thread.sleep(500)
         }  
+        session.close();
     }
     @OnError
     public fun onError(session: Session, errorReason: Throwable) {

@@ -104,22 +104,19 @@ public class UploadCSVQRWebSocketController(
                     "safe" to response.properties.safe
                 )
             )))
-            val thread = Thread(){ 
-                    val imageData = QRCode(uri.toString()).render(cellSize = 5)
-                    val img = ImageIO.write(imageData, "PNG", File("qr.png"))
-                    val path = "qr.png"
-    
-                    val encoded = Files.readAllBytes(Paths.get(path))
-    
-                    val base64 = Base64.getEncoder().encode(encoded);
-                    Thread.sleep(1500)
-                    session.sendMessage(TextMessage("QRMessage"));
-                    session.sendMessage(TextMessage(base64));
-            }
-            thread.start()
-            session.sendMessage(TextMessage(("http://localhost:8080/tiny-"+URI(response.hash).toString())))
+        }
+        for (i in shortUrlArray){
+            val imageData = QRCode(i.url.toString()).render(cellSize = 5)
+            val img = ImageIO.write(imageData, "PNG", File("qr.png"))
+            val path = "qr.png"
+
+            val encoded = Files.readAllBytes(Paths.get(path))
+
+            val base64 = Base64.getEncoder().encode(encoded);
+            session.sendMessage(TextMessage(base64));
             Thread.sleep(500)
         }  
+        session.close();
     }
     @OnError
     public fun onError(session: Session, errorReason: Throwable) {
