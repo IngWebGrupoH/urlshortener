@@ -15,13 +15,15 @@ function send() {
         wsQR.binaryType = "arraybuffer";
         wsQR.onmessage = function(msg) {
             console.log(msg)
-            console.log('<div class="row"><img id=ItemPreview src=data:image/png;base64,' + msg.data + '></div>');
-            $("#resultCSVQR").append('<div class="row"><img id=ItemPreview src=data:image/png;base64,' + msg.data + '></div>');
+            console.log("<p>" + '<img src=data:image/png;base64,' + msg.data + '></img>' +
+                "</p>");
+            $("#resultCSVQR").append("<p>" + '<img src=data:image/png;base64,' + msg.data + ' width="60" height="60"></img>' +
+                "</p>");
         }
         ws.onmessage = function(event) {
             var funtion = ws.onmessage;
             ws.onmessage = funtion
-            $("#result").append("<p>" + event.data + "    " + '<img src="js/images/clock.png" width="60" height="60"></img>' +
+            $("#result").append("<p>" + event.data + "    " + '<img src="js/images/clock.png" width="60" height="60"></img>\n\n' +
                 "</p>");
         };
         sleep(500).then(() => {
