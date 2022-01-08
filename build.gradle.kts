@@ -58,7 +58,7 @@ project(":delivery") {
         "implementation"("commons-validator:commons-validator:1.6")
         "implementation"("org.apache.directory.studio:org.apache.commons.io:2.4")
         "implementation"("org.mockito.kotlin:mockito-kotlin:3.2.0")
-        
+        "implementation"("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.2")
         "implementation"("com.opencsv:opencsv:4.0")
         "implementation"("com.google.guava:guava:23.0")
         "implementation"("io.github.g0dkar:qrcode-kotlin:1.1.0") // MIO

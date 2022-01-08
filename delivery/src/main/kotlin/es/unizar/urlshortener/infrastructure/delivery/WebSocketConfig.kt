@@ -15,8 +15,12 @@ class WebSocketConfig : WebSocketConfigurer {
     @Autowired
     private lateinit var socketHandlerCSVQR: UploadCSVQRWebSocketController
  
+    @Autowired
+    private lateinit var socketHandlerCSVStatus: UploadCSVStatusWebSocketController
+
     override fun registerWebSocketHandlers(registry: WebSocketHandlerRegistry) {
         registry.addHandler(socketHandler, "/websocket/CSVUpload").setAllowedOrigins("*")
         registry.addHandler(socketHandlerCSVQR, "/websocket/CSVUploadQR").setAllowedOrigins("*")
+        registry.addHandler(socketHandlerCSVStatus, "/websocket/CSVUploadStatus").setAllowedOrigins("*")
     }
 }
