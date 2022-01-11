@@ -69,7 +69,8 @@ class UploadCSVControllerImpl(
                     url = URI(response.hash),
                     properties = mapOf(
                         "safe" to response.properties.safe
-                    )
+                    ),
+                    seguro = true
                 )))
                 
             }

@@ -85,7 +85,8 @@ public class UploadCSVWebSocketController(
                 url = URI(response.hash),
                 properties = mapOf(
                     "safe" to response.properties.safe
-                )
+                ),
+                seguro= true
             )))
             session.sendMessage(TextMessage(("http://localhost:8080/tiny-"+URI(response.hash).toString())))
         }  
