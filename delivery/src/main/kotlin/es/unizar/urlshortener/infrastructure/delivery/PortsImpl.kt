@@ -56,12 +56,9 @@ class SafeAndReacheableServiceImpl : SafeAndReacheableService {
                 .POST(HttpRequest.BodyPublishers.ofString(data))
                 .build()
                 val response = client.send(request, HttpResponse.BodyHandlers.ofString());
-        print("DEBUG: "+response.body().toString())
         if(response.body().toString().equals("{}\n")){
-            println(true)
             return true
         }
-        println(false)
        return false
     }
 
