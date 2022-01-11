@@ -43,7 +43,7 @@ class SafeAndReacheableServiceImpl : SafeAndReacheableService {
 
         val ResourceUrl: String = "https://safebrowsing.googleapis.com/v4/threatMatches:find?key=" + apiKey ;
         val mapClient = mapOf("clientId" to "es.unizar.urlshortener", "clientVersion" to "1.0.0")
-        val mapThreatInfo = mapOf("threatTypes" to listOf("MALWARE", "SOCIAL_ENGINEERING", ""),
+        val mapThreatInfo = mapOf("threatTypes" to listOf("MALWARE", "SOCIAL_ENGINEERING"),
             "platformTypes" to listOf("WINDOWS"),
             "threatEntryTypes" to listOf("URL"),
             "threatEntries" to listOf(mapOf("url" to url)))
@@ -56,15 +56,19 @@ class SafeAndReacheableServiceImpl : SafeAndReacheableService {
                 .POST(HttpRequest.BodyPublishers.ofString(data))
                 .build()
                 val response = client.send(request, HttpResponse.BodyHandlers.ofString());
-        println(response.body())
-       return response.body().length == 0
+        print("DEBUG: "+response.body().toString())
+        if(response.body().toString().equals("{}\n")){
+            println(true)
+            return true
+        }
+        println(false)
+       return false
     }
 
     override fun isReacheable(url:String): Boolean {
         try {
             val connection = URL(url).openConnection() as HttpURLConnection
             connection.setConnectTimeout(2000)
-            System.out.println("YES")
             return connection.responseCode == 200
         } catch (e: Exception) {
             return false

@@ -57,7 +57,8 @@ import java.io.StringWriter
 
 @Component
 public class UploadCSVStatusWebSocketController(
-    val createShortUrl :CreateShortUrlUseCase
+    val createShortUrl :CreateShortUrlUseCase,
+    val isSafeAndReacheableService: SafeAndReacheableService
 ): TextWebSocketHandler(){
 
     @Throws(Exception::class)
@@ -91,11 +92,12 @@ public class UploadCSVStatusWebSocketController(
             val nullFragment = null;
             val uri = URI(url.getProtocol(), url.getHost(), url.getPath(), url.getQuery(), nullFragment);
             session.sendMessage(TextMessage("seguro"));
-            // if(checkUrl(i.url.toString())){
-            //     session.sendMessage(TextMessage("seguro"));
-            // }else{
-            //     session.sendMessage(TextMessage("no seguro"));
-            // }
+            if(isSafeAndReacheableService.isReacheable(url.toString())
+            && isSafeAndReacheableService.isSafe(url.toString())){
+                session.sendMessage(TextMessage("seguro"));
+            }else{
+                session.sendMessage(TextMessage("no seguro"));
+            }
         }
         session.close();
     }
