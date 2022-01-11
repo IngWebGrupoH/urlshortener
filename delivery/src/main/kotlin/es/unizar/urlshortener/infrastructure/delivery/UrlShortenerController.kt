@@ -8,6 +8,7 @@ import es.unizar.urlshortener.core.ShortUrlProperties
 import es.unizar.urlshortener.core.usecases.LogClickUseCase
 import es.unizar.urlshortener.core.usecases.CreateShortUrlUseCase
 import es.unizar.urlshortener.core.usecases.RedirectUseCase
+import es.unizar.urlshortener.core.*
 import org.springframework.hateoas.server.mvc.linkTo
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
@@ -65,7 +66,8 @@ data class ShortUrlDataOut(
 class UrlShortenerControllerImpl(
     val redirectUseCase: RedirectUseCase,
     val logClickUseCase: LogClickUseCase,
-    val createShortUrlUseCase: CreateShortUrlUseCase
+    val createShortUrlUseCase: CreateShortUrlUseCase,
+    val isSafeAndReacheableService: SafeAndReacheableService
 ) : UrlShortenerController {
 
     @GetMapping("/tiny-{id:.*}")
@@ -89,12 +91,14 @@ class UrlShortenerControllerImpl(
             val h = HttpHeaders()
             val url = linkTo<UrlShortenerControllerImpl> { redirectTo(it.hash, request) }.toUri()
             h.location = url
+            LOGGER.info(url.toString())
             val response = ShortUrlDataOut(
                 url = url,
                 properties = mapOf(
                     "safe" to it.properties.safe
                 ),
-                seguro = true
+                seguro = isSafeAndReacheableService.isReacheable(url.toString())
+                && isSafeAndReacheableService.isSafe(url.toString())  
             )
             ResponseEntity<ShortUrlDataOut>(response, h, HttpStatus.CREATED)
         }

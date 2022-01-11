@@ -107,7 +107,6 @@ public class UploadCSVQRWebSocketController(
             )))
         }
         for (i in shortUrlArray){
-            LOGGER.info("DEBUG: "+"http://localhost:8080/tiny-"+i.shortUrl.url.toString())
             val imageData = QRCode("http://localhost:8080/tiny-"+i.shortUrl.url.toString()).render(cellSize = 5)
             val img = ImageIO.write(imageData, "PNG", File("qr.png"))
             val path = "qr.png"
