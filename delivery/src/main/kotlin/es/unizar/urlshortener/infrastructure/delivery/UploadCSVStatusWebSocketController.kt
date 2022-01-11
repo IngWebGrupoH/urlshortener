@@ -40,8 +40,6 @@ import com.opencsv.CSVWriter
 
 import java.net.*
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.json.Json
-import kotlinx.serialization.encodeToString
 import java.io.File
 import javax.imageio.ImageIO
 import io.github.g0dkar.qrcode.QRCode
