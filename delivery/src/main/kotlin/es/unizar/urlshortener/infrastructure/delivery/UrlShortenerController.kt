@@ -66,8 +66,10 @@ data class ShortUrlDataOut(
 class UrlShortenerControllerImpl(
     val redirectUseCase: RedirectUseCase,
     val logClickUseCase: LogClickUseCase,
+    private val validatorService: ValidatorService,
     val createShortUrlUseCase: CreateShortUrlUseCase,
     val isSafeAndReacheableService: SafeAndReacheableService
+    
 ) : UrlShortenerController {
 
     @GetMapping("/tiny-{id:.*}")
@@ -91,14 +93,15 @@ class UrlShortenerControllerImpl(
             val h = HttpHeaders()
             val url = linkTo<UrlShortenerControllerImpl> { redirectTo(it.hash, request) }.toUri()
             h.location = url
-            LOGGER.info(url.toString())
+            LOGGER.info(data.url)
+            
             val response = ShortUrlDataOut(
                 url = url,
                 properties = mapOf(
                     "safe" to it.properties.safe
                 ),
-                seguro = isSafeAndReacheableService.isReacheable(url.toString())
-                && isSafeAndReacheableService.isSafe(url.toString())  
+                seguro = validatorService.isValid(data.url) && isSafeAndReacheableService.isReacheable(data.url)
+            && isSafeAndReacheableService.isSafe(data.url)  
             )
             ResponseEntity<ShortUrlDataOut>(response, h, HttpStatus.CREATED)
         }

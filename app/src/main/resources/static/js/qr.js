@@ -13,7 +13,7 @@ $(document).ready(
                         data: $(this).serialize(),
                         success: function(image, request) {
                             $("#resultQr").html(
-                                "<img id=ItemPreview src=data:image/png;base64," + image + ">");
+                                "<img id=ItemPreview src=data:image/png;base64," + image + " width=60 height=60>");
                         },
                         error: function(e) {
                             $("#resultQr").html(
