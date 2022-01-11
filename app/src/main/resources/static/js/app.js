@@ -13,7 +13,7 @@ $(document).ready(
                     url: "/api/link",
                     data: $(this).serialize(),
                     success: function(msg, status, request) {
-                        $("#result").html(
+                        $("#resultSimple").html(
                             "<div class='alert alert-success lead'><a target='_blank' href='" +
                             request.getResponseHeader('Location') +
                             "'>" +

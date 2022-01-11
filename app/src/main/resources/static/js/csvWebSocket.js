@@ -38,7 +38,9 @@ function send() {
                 "</p>");
         }
         ws.onmessage = function(event) {
-            $("#result").append("<p>" + event.data + '</p>\n\n\n\n\n\n\n\n\n\n\n\n');
+            var funtion = ws.onmessage;
+            ws.onmessage = funtion
+            $("#result").append("<br></br><p>" + event.data + '</p>');
         };
         sleep(500).then(() => {
             var reader = new FileReader();
