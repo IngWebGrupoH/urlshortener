@@ -1,13 +1,13 @@
 $(document).ready(
     function() {
-        $("#resultCSVQR").empty();
-        $("#result").empty();
-        $("#resultStatus").empty();
-        $("#resultQr").empty();
-        $("#resultCSVStatus").empty();
         $("#shortener").submit(
             function(event) {
                 event.preventDefault();
+                $("#resultCSVQR").empty();
+                $("#result").empty();
+                $("#resultStatus").empty();
+                $("#resultQr").empty();
+                $("#resultCSVStatus").empty();
                 $.ajax({
                     type: "POST",
                     url: "/api/link",
@@ -24,8 +24,7 @@ $(document).ready(
                             $("#resultStatus").html('<p><img src="js/images/check_g.webp" width="60" height="60"></img></p>');
                         } else {
 
-                            $("#resultStatus").html("<p>" + '<img src="js/images/check_r.webp" width="60" height="60"></img>' +
-                                "</p>");
+                            $("#resultStatus").html('<p><img src="js/images/check_r.webp" width="60" height="60"></img></p>');
                         }
 
                     },

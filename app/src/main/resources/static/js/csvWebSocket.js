@@ -5,10 +5,10 @@ function sleep(time) {
 
 function send() {
     $("#resultCSVQR").empty();
-    $("#resultCSVStatus").empty();
     $("#result").empty();
+    $("#resultStatus").empty();
     $("#resultQr").empty();
-    $("#resultstatus").empty();
+    $("#resultCSVStatus").empty();
 
     if (($('#bc').is(':checked'))) {
         ws = new WebSocket("ws://localhost:8080/websocket/CSVUpload");
