@@ -36,9 +36,10 @@ class CreateShortUrlUseCaseImpl(
                     sponsor = data.sponsor
                 )
             )
-            if(shortUrlRepository.findByKey(su.hash)?.hash!=null){
-                shortUrlRepository.save(su)
-            }
+            shortUrlRepository.save(su)
+            // if(shortUrlRepository.findByKey(su.hash)?.hash!=null){
+                
+            // }
             return su;
         } else {
             throw InvalidUrlException(url)

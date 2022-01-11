@@ -91,7 +91,6 @@ public class UploadCSVStatusWebSocketController(
         for (i in content) {
             val url = URL(i);
             val nullFragment = null;
-            
             val uri = URI(url.getProtocol(), url.getHost(), url.getPath(), url.getQuery(), nullFragment);
             session.sendMessage(TextMessage("seguro"));
             // if(checkUrl(i.url.toString())){
@@ -99,7 +98,6 @@ public class UploadCSVStatusWebSocketController(
             // }else{
             //     session.sendMessage(TextMessage("no seguro"));
             // }
-            Thread.sleep(500)
         }
         session.close();
     }

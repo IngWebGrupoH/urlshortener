@@ -102,11 +102,13 @@ public class UploadCSVQRWebSocketController(
                 url = URI(response.hash),
                 properties = mapOf(
                     "safe" to response.properties.safe
-                )
+                ),
+                seguro = true
             )))
         }
         for (i in shortUrlArray){
-            val imageData = QRCode(i.url.toString()).render(cellSize = 5)
+            LOGGER.info("DEBUG: "+"http://localhost:8080/tiny-"+i.shortUrl.url.toString())
+            val imageData = QRCode("http://localhost:8080/tiny-"+i.shortUrl.url.toString()).render(cellSize = 5)
             val img = ImageIO.write(imageData, "PNG", File("qr.png"))
             val path = "qr.png"
 
@@ -114,7 +116,6 @@ public class UploadCSVQRWebSocketController(
 
             val base64 = Base64.getEncoder().encode(encoded);
             session.sendMessage(TextMessage(base64));
-            Thread.sleep(500)
         }  
         session.close();
     }

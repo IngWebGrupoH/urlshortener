@@ -1,5 +1,6 @@
 package es.unizar.urlshortener.infrastructure.delivery
 
+import org.slf4j.LoggerFactory
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import es.unizar.urlshortener.core.ClickProperties
 import es.unizar.urlshortener.core.ShortUrl
@@ -50,7 +51,8 @@ data class ShortUrlDataIn(
  */
 data class ShortUrlDataOut(
     val url: URI? = null,
-    val properties: Map<String, Any> = emptyMap()
+    val properties: Map<String, Any> = emptyMap(),
+    val seguro : Boolean
 )
 
 
@@ -91,9 +93,13 @@ class UrlShortenerControllerImpl(
                 url = url,
                 properties = mapOf(
                     "safe" to it.properties.safe
-                )
+                ),
+                seguro = true
             )
             ResponseEntity<ShortUrlDataOut>(response, h, HttpStatus.CREATED)
         }
-    
+        
+        companion object {
+            private val LOGGER = LoggerFactory.getLogger(this::class.java)
+        }
 }
