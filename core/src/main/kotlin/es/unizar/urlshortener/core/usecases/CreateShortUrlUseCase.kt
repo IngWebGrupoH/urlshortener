@@ -21,11 +21,13 @@ interface CreateShortUrlUseCase {
 class CreateShortUrlUseCaseImpl(
     private val shortUrlRepository: ShortUrlRepositoryService,
     private val validatorService: ValidatorService,
-    private val hashService: HashService
+    private val hashService: HashService,
+    private val isSafeAndReacheableService: SafeAndReacheableService
 ) : CreateShortUrlUseCase {
     override fun create(url: String, data: ShortUrlProperties):ShortUrl{ 
         
-        if (validatorService.isValid(url)) {
+        if (validatorService.isValid(url) && isSafeAndReacheableService.isReacheable(url)
+            && isSafeAndReacheableService.isSafe(url)  ) {
             val id: String = hashService.hasUrl(url)
             val su = ShortUrl(
                 hash = id,
