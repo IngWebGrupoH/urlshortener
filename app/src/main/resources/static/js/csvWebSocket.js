@@ -7,6 +7,7 @@ function send() {
     $("#resultCSVQR").empty();
     $("#result").empty();
     $("#resultStatus").empty();
+    $("#resultSimple").empty();
     $("#resultQr").empty();
     $("#resultCSVStatus").empty();
 
@@ -21,12 +22,10 @@ function send() {
             console.log(msg.data)
             if (msg.data == "seguro") {
 
-                $("#resultCSVStatus").append("<p>" + '<img src="js/images/check_g.webp" width="60" height="60"></img>' +
-                    "</p>");
+                $("#resultCSVStatus").append('<p><img src="js/images/check_g.webp" width="60" height="60"></img></p>');
             } else if (msg.data == "no seguro") {
 
-                $("#resultCSVStatus").append("<p>" + '<img src="js/images/check_r.webp" width="60" height="60"></img>' +
-                    "</p>");
+                $("#resultCSVStatus").append('<p><img src="js/images/check_r.webp" width="60" height="60"></img></p>');
             }
         }
         wsQR.binaryType = "arraybuffer";

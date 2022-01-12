@@ -92,7 +92,6 @@ public class UploadCSVStatusWebSocketController(
             val url = URL(i);
             val nullFragment = null;
             val uri = URI(url.getProtocol(), url.getHost(), url.getPath(), url.getQuery(), nullFragment);
-            session.sendMessage(TextMessage("seguro"));
                         
             if(validatorService.isValid(url.toString()) && isSafeAndReacheableService.isReacheable(url.toString())
             && isSafeAndReacheableService.isSafe(url.toString())  ){
