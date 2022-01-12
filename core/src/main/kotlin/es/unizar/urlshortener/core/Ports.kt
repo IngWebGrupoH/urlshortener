@@ -32,3 +32,8 @@ interface ValidatorService {
 interface HashService {
     fun hasUrl(url: String): String
 }
+
+interface SafeAndReacheableService {
+    fun isSafe(url: String): Boolean
+    fun isReacheable( url: String ): Boolean
+}

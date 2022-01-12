@@ -64,10 +64,11 @@ project(":delivery") {
         "implementation"("io.github.g0dkar:qrcode-kotlin:1.1.0") // MIO
         "implementation"("org.springframework.boot:spring-boot-starter-websocket")
         "implementation"("io.micrometer:micrometer-core")// MIO
-        
-
         "testImplementation"("org.springframework.boot:spring-boot-starter-test")
         "testImplementation"("org.mockito.kotlin:mockito-kotlin:3.2.0")
+        //added
+        "implementation" ("org.json:json:20090211")
+
     }
     tasks.getByName<BootJar>("bootJar") {
         enabled = false
@@ -83,6 +84,9 @@ project(":app") {
         "implementation"(project(":delivery"))
         "implementation"(project(":repositories"))
         "implementation"("org.springframework.boot:spring-boot-starter")
+        "implementation"("org.springframework.boot:spring-boot-starter-web")
+        "implementation"("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.2")
+        "implementation" ("com.google.code.gson:gson:2.8.5")
         "implementation"( "org.webjars:bootstrap:3.3.5")
         "implementation"("org.webjars:jquery:2.1.4")
         "implementation"("org.springframework.boot:spring-boot-starter-actuator")// MIO

@@ -2,16 +2,18 @@ package es.unizar.urlshortener.infrastructure.delivery
 
 import com.fasterxml.jackson.databind.node.JsonNodeFactory
 import com.fasterxml.jackson.databind.node.ObjectNode
+import org.slf4j.LoggerFactory
 import es.unizar.urlshortener.core.ClickProperties
 import es.unizar.urlshortener.core.ShortUrlProperties
-import es.unizar.urlshortener.core.usecases.CreateShortUrlUseCase
 import es.unizar.urlshortener.core.usecases.LogClickUseCase
 import es.unizar.urlshortener.core.usecases.RedirectUseCase
-import io.micrometer.core.instrument.Counter
 import io.micrometer.core.instrument.Meter
 import io.micrometer.core.instrument.MeterRegistry
 import io.micrometer.core.instrument.Timer
 import org.springframework.beans.factory.annotation.Autowired
+import es.unizar.urlshortener.core.*
+import es.unizar.urlshortener.core.usecases.CreateShortUrlUseCase
+import io.micrometer.core.instrument.Counter
 import org.springframework.hateoas.server.mvc.linkTo
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
@@ -61,7 +63,8 @@ data class ShortUrlDataIn(
  */
 data class ShortUrlDataOut(
     val url: URI? = null,
-    val properties: Map<String, Any> = emptyMap()
+    val properties: Map<String, Any> = emptyMap(),
+    val seguro : Boolean
 )
 
 
@@ -74,7 +77,10 @@ data class ShortUrlDataOut(
 class UrlShortenerControllerImpl(
     val redirectUseCase: RedirectUseCase,
     val logClickUseCase: LogClickUseCase,
-    val createShortUrlUseCase: CreateShortUrlUseCase
+    private val validatorService: ValidatorService,
+    val createShortUrlUseCase: CreateShortUrlUseCase,
+    val isSafeAndReacheableService: SafeAndReacheableService
+    
 ) : UrlShortenerController {
 
     val factory = JsonNodeFactory.instance
@@ -139,11 +145,15 @@ class UrlShortenerControllerImpl(
             val url = linkTo<UrlShortenerControllerImpl> { redirectTo(it.hash, request) }.toUri()
             h.location = url
             totalShortenerPetitions.increment()
+            LOGGER.info(data.url)
+            
             val response = ShortUrlDataOut(
                 url = url,
                 properties = mapOf(
                     "safe" to it.properties.safe
-                )
+                ),
+                seguro = validatorService.isValid(data.url) && isSafeAndReacheableService.isReacheable(data.url)
+            && isSafeAndReacheableService.isSafe(data.url)  
             )
             timer.record(System.nanoTime()-startTime, TimeUnit.NANOSECONDS)
             ResponseEntity<ShortUrlDataOut>(response, h, HttpStatus.CREATED)
@@ -181,4 +191,8 @@ class UrlShortenerControllerImpl(
         return metrics
     }
 
+        
+        companion object {
+            private val LOGGER = LoggerFactory.getLogger(this::class.java)
+        }
 }
