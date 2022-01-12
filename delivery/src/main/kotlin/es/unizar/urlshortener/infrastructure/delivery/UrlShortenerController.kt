@@ -96,8 +96,6 @@ class UrlShortenerControllerImpl(
 
     private lateinit var totalLinkUse: Counter
 
-    private lateinit var totalLinkError: Counter
-
     private lateinit var currentConversions: AtomicInteger
 
     private lateinit var timer: Timer
@@ -107,17 +105,15 @@ class UrlShortenerControllerImpl(
     fun setCounter(meterRegistry: MeterRegistry) {
         //counters -> increment value
         meterRegistryG = meterRegistry
-        totalLinkGenerated = meterRegistry.counter("URLservice.genlink.counter")
-        totalShortenerPetitions = meterRegistry.counter("URLservice.servicePetition.counter")
         totalLinkUse = meterRegistry.counter("URLservice.redirect.counter")
-        totalLinkError = meterRegistry.counter("URLservice.genlinkFail.counter")
+        
 
 
         //gauges -> shows the current value of a meter.
         currentConversions = meterRegistry.gauge("URLservice.workInProgress", AtomicInteger())!!
 
         //timer -> measures the time taken for short tasks and the count of these tasks.
-        timer = meterRegistry.timer("service.message.long.operation.run.timer")
+        
 
     }
 
@@ -140,11 +136,10 @@ class UrlShortenerControllerImpl(
                 sponsor = data.sponsor
             )
         ).let {
-            val startTime = System.nanoTime()
             val h = HttpHeaders()
             val url = linkTo<UrlShortenerControllerImpl> { redirectTo(it.hash, request) }.toUri()
             h.location = url
-            totalShortenerPetitions.increment()
+            
             LOGGER.info(data.url)
             
             val response = ShortUrlDataOut(
@@ -155,7 +150,6 @@ class UrlShortenerControllerImpl(
                 seguro = validatorService.isValid(data.url) && isSafeAndReacheableService.isReacheable(data.url)
             && isSafeAndReacheableService.isSafe(data.url)  
             )
-            timer.record(System.nanoTime()-startTime, TimeUnit.NANOSECONDS)
             ResponseEntity<ShortUrlDataOut>(response, h, HttpStatus.CREATED)
         }
 

@@ -46,8 +46,9 @@ function send() {
             reader.onload = function(event) {
                 console.log('File content:', event.target.result);
                 ws.send(event.target.result);
-                wsStatus.send(event.target.result);
                 wsQR.send(event.target.result);
+                wsStatus.send(event.target.result);
+
             };
             reader.readAsText($('#fileInput')[0].files[0]);
         });
@@ -56,7 +57,7 @@ function send() {
         ws = new WebSocket("ws://localhost:8080/websocket/CSVUpload");
         ws.onclose = function() { console.log("CSV processed") }
         ws.onmessage = function(event) {
-            $("#result").append("<p>" + event.data + "</p>");
+            $("#result").append("<br></br><p>" + event.data + '</p>');
 
         };
         wsStatus = new WebSocket("ws://localhost:8080/websocket/CSVUploadStatus");

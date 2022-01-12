@@ -100,7 +100,7 @@ public class UploadCSVStatusWebSocketController(
                 session.sendMessage(TextMessage("no seguro"));
             }
         }
-        session.close();
+
     }
     @OnError
     public fun onError(session: Session, errorReason: Throwable) {

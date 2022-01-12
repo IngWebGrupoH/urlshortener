@@ -94,7 +94,6 @@ public class UploadCSVQRWebSocketController(
             val url = URL(i);
             val nullFragment = null;
             val uri = URI(url.getProtocol(), url.getHost(), url.getPath(), url.getQuery(), nullFragment);
-            LOGGER.info("url="+uri.toString());
             val response=createShortUrl.create(uri.toString(), ShortUrlProperties(
                 ip = "request.remoteAddr"
             )) 
@@ -114,9 +113,10 @@ public class UploadCSVQRWebSocketController(
             val encoded = Files.readAllBytes(Paths.get(path))
 
             val base64 = Base64.getEncoder().encode(encoded);
+            LOGGER.info(base64.toString());
             session.sendMessage(TextMessage(base64));
         }  
-        session.close();
+
     }
     @OnError
     public fun onError(session: Session, errorReason: Throwable) {
