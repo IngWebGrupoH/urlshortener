@@ -94,7 +94,7 @@ public class UploadCSVQRWebSocketController(
             val url = URL(i);
             val nullFragment = null;
             val uri = URI(url.getProtocol(), url.getHost(), url.getPath(), url.getQuery(), nullFragment);
-            val response=createShortUrl.create(uri.toString(), ShortUrlProperties(
+            val response = createShortUrl.create(uri.toString(), ShortUrlProperties(
                 ip = "request.remoteAddr"
             )) 
             shortUrlArray.add(CSVDataOut(uri,ShortUrlDataOut(

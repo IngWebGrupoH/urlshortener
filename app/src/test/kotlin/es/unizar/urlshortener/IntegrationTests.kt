@@ -94,7 +94,7 @@ class HttpRequestTest {
         val response = restTemplate.postForEntity("http://localhost:$port/api/link",
             HttpEntity(data, headers), ShortUrlDataOut::class.java)
 
-        assertThat(response.statusCode).isEqualTo(HttpStatus.BAD_REQUEST)
+        assertThat(response.body?.seguro).isEqualTo(false)
 
         assertThat(JdbcTestUtils.countRowsInTable(jdbcTemplate, "shorturl")).isEqualTo(0)
         assertThat(JdbcTestUtils.countRowsInTable(jdbcTemplate, "click")).isEqualTo(0)

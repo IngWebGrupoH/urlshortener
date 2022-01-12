@@ -15,6 +15,13 @@ import java.net.http.HttpClient
 import java.net.http.HttpRequest
 import java.net.http.HttpResponse
 import java.nio.charset.StandardCharsets
+
+import io.micrometer.core.instrument.Counter
+import java.util.concurrent.atomic.AtomicInteger
+import org.springframework.beans.factory.annotation.Autowired
+import io.micrometer.core.instrument.MeterRegistry
+import io.micrometer.core.instrument.Timer
+import java.util.concurrent.TimeUnit
 /**
  * Implementation of the port [ValidatorService].
  */
@@ -37,6 +44,13 @@ class HashServiceImpl : HashService {
 }
 
 class SafeAndReacheableServiceImpl : SafeAndReacheableService {
+    private lateinit var totalThreats: Counter
+    @Autowired
+    fun setCounter(meterRegistry: MeterRegistry) {
+        //counters -> increment value
+        totalThreats = meterRegistry.counter("URLservice.threat.counter")
+    }
+    
     override fun isSafe(url: String): Boolean {
 
         val apiKey: String = "AIzaSyAT03r8yFpf4-FsxV2_wz7iKXOdBfsupsw"
@@ -59,6 +73,7 @@ class SafeAndReacheableServiceImpl : SafeAndReacheableService {
         if(response.body().toString().equals("{}\n")){
             return true
         }
+       totalThreats.increment()
        return false
     }
 

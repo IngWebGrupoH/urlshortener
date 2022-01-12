@@ -11,6 +11,7 @@ import org.mockito.kotlin.verify
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.boot.test.mock.mockito.MockBean
+import org.springframework.boot.test.context.TestConfiguration
 import org.springframework.http.MediaType
 import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.web.servlet.MockMvc
@@ -19,16 +20,34 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers.print
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
+import io.micrometer.core.instrument.MeterRegistry
+import io.micrometer.core.instrument.Meter
+import io.micrometer.core.instrument.simple.SimpleMeterRegistry
+import io.micrometer.core.instrument.Counter
+import org.springframework.context.annotation.Bean
+import org.springframework.context.annotation.Configuration
+import org.springframework.context.annotation.Import
 
 @WebMvcTest
 @ContextConfiguration(classes = [
     UrlShortenerControllerImpl::class,
-    RestResponseEntityExceptionHandler::class,
-    RestTemplate::class])
+    RestResponseEntityExceptionHandler::class])
 class UrlShortenerControllerTest {
 
     @Autowired
     private lateinit var mockMvc: MockMvc
+
+    @Autowired
+    @MockBean
+    private lateinit var validatorService: ValidatorService
+
+    @Autowired
+    @MockBean
+    private lateinit var meterRegistry: MeterRegistry
+
+    @Autowired
+    @MockBean
+    private lateinit var safeAndReacheableService: SafeAndReacheableService
 
     @MockBean
     private lateinit var redirectUseCase: RedirectUseCase

@@ -1,22 +1,20 @@
 package es.unizar.urlshortener
 
 import es.unizar.urlshortener.core.usecases.*
-import es.unizar.urlshortener.infrastructure.delivery.HashServiceImpl
-import es.unizar.urlshortener.infrastructure.delivery.SafeAndReacheableServiceImpl
-import es.unizar.urlshortener.infrastructure.delivery.ValidatorServiceImpl
-import es.unizar.urlshortener.infrastructure.repositories.ClickEntityRepository
-import es.unizar.urlshortener.infrastructure.repositories.ClickRepositoryServiceImpl
-import es.unizar.urlshortener.infrastructure.repositories.ShortUrlEntityRepository
-import es.unizar.urlshortener.infrastructure.repositories.ShortUrlRepositoryServiceImpl
+import es.unizar.urlshortener.infrastructure.delivery.*
+import es.unizar.urlshortener.infrastructure.repositories.*
+import io.micrometer.core.instrument.MeterRegistry
+import io.micrometer.core.instrument.Counter
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-
+import io.micrometer.core.instrument.simple.SimpleMeterRegistry
 /**
  * Wires use cases with service implementations, and services implementations with repositories.
  *
  * **Note**: Spring Boot is able to discover this [Configuration] without further configuration.
  */
+
 @Configuration
 class ApplicationConfiguration(
     @Autowired val shortUrlEntityRepository: ShortUrlEntityRepository,
@@ -30,7 +28,7 @@ class ApplicationConfiguration(
 
     @Bean
     fun validatorService() = ValidatorServiceImpl()
-    
+
     @Bean
     fun safeAndReacheableService() = SafeAndReacheableServiceImpl()
 
@@ -45,4 +43,7 @@ class ApplicationConfiguration(
 
     @Bean
     fun createShortUrlUseCase() = CreateShortUrlUseCaseImpl(shortUrlRepositoryService(), validatorService(), hashService(), safeAndReacheableService())
+    
+    @Bean
+    fun meterRegistry() = SimpleMeterRegistry();
 }

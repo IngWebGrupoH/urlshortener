@@ -77,45 +77,14 @@ data class ShortUrlDataOut(
 class UrlShortenerControllerImpl(
     val redirectUseCase: RedirectUseCase,
     val logClickUseCase: LogClickUseCase,
-    private val validatorService: ValidatorService,
-    val createShortUrlUseCase: CreateShortUrlUseCase,
-    val isSafeAndReacheableService: SafeAndReacheableService
+    val createShortUrlUseCase: CreateShortUrlUseCase
     
 ) : UrlShortenerController {
 
     val factory = JsonNodeFactory.instance
 
-    var meterRegistryG: MeterRegistry? = null
-
-
-    private lateinit var totalLinkGenerated: Counter
-
-
-
-    private lateinit var totalShortenerPetitions: Counter
-
-    private lateinit var totalLinkUse: Counter
-
-    private lateinit var currentConversions: AtomicInteger
-
-    private lateinit var timer: Timer
-
-
     @Autowired
-    fun setCounter(meterRegistry: MeterRegistry) {
-        //counters -> increment value
-        meterRegistryG = meterRegistry
-        totalLinkUse = meterRegistry.counter("URLservice.redirect.counter")
-        
-
-
-        //gauges -> shows the current value of a meter.
-        currentConversions = meterRegistry.gauge("URLservice.workInProgress", AtomicInteger())!!
-
-        //timer -> measures the time taken for short tasks and the count of these tasks.
-        
-
-    }
+    private lateinit var meterRegistry:MeterRegistry
 
     @GetMapping("/tiny-{id:.*}")
     override fun redirectTo(@PathVariable id: String, request: HttpServletRequest): ResponseEntity<Void> =
@@ -123,7 +92,7 @@ class UrlShortenerControllerImpl(
             logClickUseCase.logClick(id, ClickProperties(ip = request.remoteAddr))
             val h = HttpHeaders()
             h.location = URI.create(it.target)
-            totalLinkUse.increment();
+
             ResponseEntity<Void>(h, HttpStatus.valueOf(it.mode))
         }
 
@@ -147,8 +116,7 @@ class UrlShortenerControllerImpl(
                 properties = mapOf(
                     "safe" to it.properties.safe
                 ),
-                seguro = validatorService.isValid(data.url) && isSafeAndReacheableService.isReacheable(data.url)
-            && isSafeAndReacheableService.isSafe(data.url)  
+                seguro = it.properties.safe
             )
             ResponseEntity<ShortUrlDataOut>(response, h, HttpStatus.CREATED)
         }
@@ -156,27 +124,27 @@ class UrlShortenerControllerImpl(
     @GetMapping("/metrics")
     fun fetchMetricsFromMicrometer(): ObjectNode? {
         val metrics = factory.objectNode()
-        for (meter in meterRegistryG?.meters!!) {
+        for (meter in meterRegistry?.meters!!) {
                 val name = meter.id.name
                 if (!name.startsWith("URLservice")) continue
                 when (meter.id.type) {
                     Meter.Type.COUNTER -> {
                         metrics.put(
                             "counter.$name",
-                            meterRegistryG?.get(name)?.counter()?.count()
+                            meterRegistry?.get(name)?.counter()?.count()
                         )
                         continue
                     }
                     Meter.Type.GAUGE -> {
                         metrics.put(
                             "gauge.$name",
-                            meterRegistryG?.get(name)?.gauge()?.value()
+                            meterRegistry?.get(name)?.gauge()?.value()
                         )
                     }
                     Meter.Type.TIMER -> {
                         metrics.put(
                             "timer.$name",
-                            meterRegistryG?.get(name)?.timer()?.mean(TimeUnit.MILLISECONDS)
+                            meterRegistry?.get(name)?.timer()?.mean(TimeUnit.MILLISECONDS)
                         )
                     }
                 }

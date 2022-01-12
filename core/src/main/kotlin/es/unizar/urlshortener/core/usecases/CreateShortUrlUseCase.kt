@@ -54,7 +54,7 @@ class CreateShortUrlUseCaseImpl(
                 hash = id,
                 redirection = Redirection(target = url),
                 properties = ShortUrlProperties(
-                    safe = data.safe,
+                    safe = true,
                     ip = data.ip,
                     sponsor = data.sponsor
                 )
@@ -68,7 +68,19 @@ class CreateShortUrlUseCaseImpl(
             return su;
         } else {
             totalLinkError.increment()
-            throw InvalidUrlException(url)
+            val id: String = hashService.hasUrl(url)
+            val su = ShortUrl(
+                hash = id,
+                redirection = Redirection(target = url),
+                properties = ShortUrlProperties(
+                    safe = false,
+                    ip = data.ip,
+                    sponsor = data.sponsor
+                )
+            )
+            currentConversions.decrementAndGet()
+            return su;
         }
+        
     }
 }
