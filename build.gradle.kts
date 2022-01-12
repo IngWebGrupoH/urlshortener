@@ -39,6 +39,9 @@ project(":core") {
         "implementation"("org.springframework.boot:spring-boot-starter-websocket")
         "implementation"("io.micrometer:micrometer-core")// MIO
     }
+    tasks.getByName<BootJar>("bootJar") {
+        enabled = false
+    }
  }
 
 project(":repositories") {
