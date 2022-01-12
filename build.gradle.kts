@@ -63,6 +63,8 @@ project(":delivery") {
         "implementation"("com.google.guava:guava:23.0")
         "implementation"("io.github.g0dkar:qrcode-kotlin:1.1.0") // MIO
         "implementation"("org.springframework.boot:spring-boot-starter-websocket")
+        "implementation"("io.micrometer:micrometer-core")// MIO
+        
 
         "testImplementation"("org.springframework.boot:spring-boot-starter-test")
         "testImplementation"("org.mockito.kotlin:mockito-kotlin:3.2.0")
@@ -83,6 +85,10 @@ project(":app") {
         "implementation"("org.springframework.boot:spring-boot-starter")
         "implementation"( "org.webjars:bootstrap:3.3.5")
         "implementation"("org.webjars:jquery:2.1.4")
+        "implementation"("org.springframework.boot:spring-boot-starter-actuator")// MIO
+        "implementation"("io.micrometer:micrometer-registry-prometheus")// MIO
+        "implementation"("org.springframework.boot:spring-boot-starter-web") // MIO
+
 
         "runtimeOnly"("org.hsqldb:hsqldb")
 
