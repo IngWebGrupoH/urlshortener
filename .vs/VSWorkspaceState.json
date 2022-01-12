@@ -1,6 +1,15 @@
 {
   "ExpandedNodes": [
-    ""
+    "",
+    "\\delivery",
+    "\\delivery\\src",
+    "\\delivery\\src\\test",
+    "\\delivery\\src\\test\\kotlin",
+    "\\delivery\\src\\test\\kotlin\\es",
+    "\\delivery\\src\\test\\kotlin\\es\\unizar",
+    "\\delivery\\src\\test\\kotlin\\es\\unizar\\urlshortener",
+    "\\delivery\\src\\test\\kotlin\\es\\unizar\\urlshortener\\infrastructure",
+    "\\delivery\\src\\test\\kotlin\\es\\unizar\\urlshortener\\infrastructure\\delivery"
   ],
   "PreviewInSolutionExplorer": false
 }
