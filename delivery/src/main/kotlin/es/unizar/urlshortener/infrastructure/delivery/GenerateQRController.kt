@@ -58,7 +58,13 @@ class GenerateQRControllerImpl(
 
         @GetMapping("/api/URLToQR")
         override fun handleURLToQR(@RequestParam("url") url: String,request: HttpServletRequest): ResponseEntity<ByteArray> {
-            val imageData = QRCode(url).render(cellSize = 5)
+            val url = URL(url);
+            val nullFragment = null;
+            val uri = URI(url.getProtocol(), url.getHost(), url.getPath(), url.getQuery(), nullFragment);
+            val response = createShortUrl.create(uri.toString(), ShortUrlProperties(
+                ip = "request.remoteAddr"
+            )) 
+            val imageData = QRCode("http://localhost:8080/tiny-"+response.hash).render(cellSize = 5)
             val img = ImageIO.write(imageData, "PNG", File("qr.png"))
             val path = "qr.png"
 
